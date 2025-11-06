@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: scpi-doc-validation-api
+
+  data:
+    mongodb:
+      uri: mongodb://admin:admin@localhost:27017/scpi_validation_db?authSource=admin
+
+server:
+  port: 8081
+
+
+
+
+
+

@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: scpi-doc-validation-api
+  data:
+    mongodb:
+      uri: mongodb://admin:admin@mongo-int:27017/int.scpi_validation_db?authSource=admin
+
+

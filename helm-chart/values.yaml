@@ -5,3 +5,8 @@ image:
 
 application:
   environment: int
+
+persistence:
+  enabled: true
+  size: 1Gi
+  storageClassName: standard

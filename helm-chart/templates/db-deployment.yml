@@ -33,5 +33,5 @@ spec:
       volumes:
         - name: mongo-data
           persistentVolumeClaim:
-            claimName: { { .Release.Name } }-pvc
+            claimName: {{ .Release.Name }}-pvc
       restartPolicy: Always

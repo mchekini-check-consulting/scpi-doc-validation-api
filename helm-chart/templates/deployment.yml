@@ -13,7 +13,7 @@ spec:
     metadata:
       name: scpi-doc-validation-api
       labels:
-        app: sscpi-doc-validation-api
+        app: scpi-doc-validation-api
     spec:
       containers:
         - name: scpi-doc-validation-api

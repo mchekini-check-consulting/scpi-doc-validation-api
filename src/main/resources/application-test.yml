@@ -1,0 +1,8 @@
+spring:
+  kafka:
+    bootstrap-servers: dummy:9092
+    consumer:
+      group-id: test-group
+      auto-offset-reset: earliest
+    listener:
+      missing-topics-fatal: false

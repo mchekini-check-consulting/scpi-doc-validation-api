@@ -22,8 +22,8 @@ public class DocumentListener {
     }
 
     @KafkaListener(
-            topics = "document-validation-topic-${spring.profiles.active}",
-            groupId = "scpi-doc-validation-group-${spring.profiles.active}"
+            topics = "document-validation-topic-${spring.profiles.active:local}",
+            groupId = "scpi-doc-validation-group-${spring.profiles.active:local}"
     )
     public void consume(UserDocumentDto documentDto) {
         log.info(

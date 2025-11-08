@@ -3,6 +3,7 @@ package fr.checkconsulting.scpi_doc_validation_api.config;
 import fr.checkconsulting.scpi_doc_validation_api.dto.UserDocumentDto;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
@@ -16,18 +17,24 @@ import java.util.Map;
 @Configuration
 public class KafkaConsumerConfig {
 
-    private static final String BOOTSTRAP_SERVERS = "localhost:9092";
-    private static final String GROUP_ID = "scpi-doc-validation-group";
+    @Value("${spring.kafka.bootstrap-servers}")
+    private String bootstrapServers;
+
+    private final TopicNameProvider topicNameProvider;
+
+    public KafkaConsumerConfig(TopicNameProvider topicNameProvider) {
+        this.topicNameProvider = topicNameProvider;
+    }
 
     @Bean
     public ConsumerFactory<String, UserDocumentDto> consumerFactory() {
-        JsonDeserializer<UserDocumentDto> deserializer = new JsonDeserializer<>(UserDocumentDto.class, false);
+        JsonDeserializer<UserDocumentDto> deserializer = new JsonDeserializer<>(UserDocumentDto.class);
         deserializer.addTrustedPackages("*");
         deserializer.ignoreTypeHeaders();
 
         Map<String, Object> props = new HashMap<>();
-        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS);
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, GROUP_ID);
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, topicNameProvider.getGroupId());
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
 
@@ -41,3 +48,4 @@ public class KafkaConsumerConfig {
         return factory;
     }
 }
+

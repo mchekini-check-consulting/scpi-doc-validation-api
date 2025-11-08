@@ -6,6 +6,13 @@ spring:
     mongodb:
       uri: mongodb://admin:admin@scpi-doc-validation-db:27017/scpi_validation_db?authSource=admin
 
+  kafka:
+    bootstrap-servers: kafka-qua-svc:9092
+    consumer:
+      group-id: doc-validation-group-qua
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
 
 
 

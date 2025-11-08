@@ -1,5 +1,6 @@
 package fr.checkconsulting.scpi_doc_validation_api.listener;
 
+import fr.checkconsulting.scpi_doc_validation_api.config.TopicNameProvider;
 import fr.checkconsulting.scpi_doc_validation_api.dto.UserDocumentDto;
 import fr.checkconsulting.scpi_doc_validation_api.service.DocumentService;
 import org.slf4j.Logger;
@@ -7,26 +8,29 @@ import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
-import static fr.checkconsulting.scpi_doc_validation_api.utils.Constants.DOCUMENT_VALIDATION_TOPIC;
-import static fr.checkconsulting.scpi_doc_validation_api.utils.Constants.SCPI_DOC_VALIDATION_GROUP;
-
 @Component
 public class DocumentListener {
 
-    private static final Logger logger = LoggerFactory.getLogger(DocumentListener.class);
+    private static final Logger log = LoggerFactory.getLogger(DocumentListener.class);
 
-    private final DocumentService documentValidationService;
+    private final DocumentService documentService;
+    private final TopicNameProvider topicNameProvider;
 
-    public DocumentListener(DocumentService documentValidationService) {
-        this.documentValidationService = documentValidationService;
+    public DocumentListener(DocumentService documentService, TopicNameProvider topicNameProvider) {
+        this.documentService = documentService;
+        this.topicNameProvider = topicNameProvider;
     }
 
     @KafkaListener(
-            topics = DOCUMENT_VALIDATION_TOPIC,
-            groupId = SCPI_DOC_VALIDATION_GROUP
+            topics = "document-validation-topic-${spring.profiles.active}",
+            groupId = "scpi-doc-validation-group-${spring.profiles.active}"
     )
     public void consume(UserDocumentDto documentDto) {
-        logger.info("Document reçu depuis Kafka : {}", documentDto);
-        documentValidationService.saveDocument(documentDto);
+        log.info(
+                "Document reçu depuis Kafka sur le topic [{}] : {}",
+                topicNameProvider.getDocumentValidationTopic(),
+                documentDto
+        );
+        documentService.saveDocument(documentDto);
     }
 }

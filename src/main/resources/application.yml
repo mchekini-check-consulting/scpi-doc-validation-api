@@ -7,17 +7,7 @@ spring:
       uri: mongodb://admin:admin@localhost:27017/scpi_validation_db?authSource=admin
 
   kafka:
-    bootstrap-servers: kafka-svc.kafka:9092
-    consumer:
-      group-id: doc-validation-group
-      auto-offset-reset: earliest
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-    admin:
-      auto-create: false
-
-server:
-  port: 8081
+    bootstrap-servers: kafka-svc.kafka:9094
 
 
 

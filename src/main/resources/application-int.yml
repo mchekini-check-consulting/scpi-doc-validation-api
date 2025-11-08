@@ -13,4 +13,9 @@ spring:
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    admin:
+      properties:
+        default.replication.factor: 1
+        min.insync.replicas: 1
+        num.partitions: 1
 

@@ -7,7 +7,7 @@ spring:
       uri: mongodb://admin:admin@scpi-doc-validation-db:27017/scpi_validation_db?authSource=admin
 
   kafka:
-    bootstrap-servers: kafka-qua-svc:9092
+    bootstrap-servers: kafka-svc.kafka:9092
     consumer:
       group-id: doc-validation-group-qua
       auto-offset-reset: earliest

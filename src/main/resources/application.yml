@@ -2,6 +2,25 @@ spring:
   application:
     name: scpi-doc-validation-api
 
+  datasource:
+    url: jdbc:postgresql://localhost:5434/postgres
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://keycloak.check-consulting.net/realms/scpi-realm
+          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
+          audiences: account
+
+  flyway:
+    enabled: false
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+
   data:
     mongodb:
       uri: mongodb://admin:admin@localhost:27017/scpi_validation_db?authSource=admin
@@ -12,6 +31,12 @@ spring:
   autoconfigure:
     exclude:
       - org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
+
+jwt:
+  auth:
+    converter:
+      ressource-id: scpi-invest-front
+      principal-attribute: preferred_username
 
 keycloak:
   auth-server-url: https://keycloak.check-consulting.net
@@ -26,3 +51,7 @@ keycloak:
     username: admin
     password: admin
     target-realm: scpi-realm
+
+logging:
+  level:
+    org.flywaydb: DEBUG

@@ -1,19 +1,19 @@
 package fr.checkconsulting.scpi_doc_validation_api.repository;
 
-import java.util.List;
-
-
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
+import fr.checkconsulting.scpi_doc_validation_api.model.entity.RolePermission;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
-import fr.checkconsulting.scpi_doc_validation_api.model.entity.RolePermission;
+import java.util.List;
 
 @Repository
-public interface RolePermissionRepository extends JpaRepository<RolePermission, Long> {
+public interface RolePermissionRepository extends MongoRepository<RolePermission, String> {
     
     List<RolePermission> findByRoleName(String roleName);
     
-    @Query("SELECT rp.permissionName FROM RolePermission rp WHERE rp.roleName = :roleName")
-    List<String> findPermissionNamesByRoleName(String roleName);
+    List<RolePermission> findByPermissionName(String permissionName);
+    
+    boolean existsByRoleNameAndPermissionName(String roleName, String permissionName);
+    
+    void deleteByRoleNameAndPermissionName(String roleName, String permissionName);
 }

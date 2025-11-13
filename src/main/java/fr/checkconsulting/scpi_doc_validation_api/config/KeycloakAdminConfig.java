@@ -16,7 +16,7 @@ public class KeycloakAdminConfig {
     @Value("${keycloak.admin.server-url}")
     private String serverUrl;
 
-    @Value("${keycloak.admin.realm}")
+    @Value("${keycloak.admin.auth-realm}")
     private String authRealm;
 
     @Value("${keycloak.admin.target-realm}")
@@ -27,6 +27,7 @@ public class KeycloakAdminConfig {
 
     @Value("${keycloak.admin.password}")
     private String password;
+
 
     @Bean
     public Keycloak keycloak() {

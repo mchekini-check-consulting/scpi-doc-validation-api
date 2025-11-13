@@ -60,11 +60,8 @@ public class RolePermissionService {
         List<String> roles = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .map(auth -> auth.replace("ROLE_", "").toLowerCase())
-                .collect(Collectors.toList());
+                .toList();
 
-        
-
-     
         if (roles.contains("premium")) return "premium";
         if (roles.contains("standard")) return "standard";
         if (roles.contains("admin")) return "admin";
@@ -86,7 +83,7 @@ public class RolePermissionService {
                     String description = rolePermissions.isEmpty() ? null : rolePermissions.get(0).getDescription();
                     return mapper.toPermissionResponse(permissionName, description, rolePermissions);
                 })
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Transactional
@@ -112,9 +109,9 @@ public class RolePermissionService {
 
         RolePermission rolePermission = mapper.toEntity(
                 CreatePermissionRequest.builder()
-                        .permissionName(request.getPermissionName())
-                        .description(description)
-                        .build(),
+                                        .permissionName(request.getPermissionName())
+                                        .description(description)
+                                        .build(),
                 request.getRoleName());
 
         repository.save(rolePermission);
@@ -128,6 +125,6 @@ public class RolePermissionService {
     public List<String> getPermissionsByRole(String roleName) {
         return repository.findByRoleName(roleName).stream()
                 .map(RolePermission::getPermissionName)
-                .collect(Collectors.toList());
+                .toList();
     }
 }

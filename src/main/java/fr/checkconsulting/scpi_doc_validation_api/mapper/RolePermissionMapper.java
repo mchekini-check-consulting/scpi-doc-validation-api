@@ -24,11 +24,11 @@ public interface RolePermissionMapper {
     PermissionResponse toDto(RolePermission entity);
 
 
-    default PermissionResponse toPermissionResponse(String permissionName, String description, 
-                                                     List<RolePermission> rolePermissions) {
+    default PermissionResponse toPermissionResponse(String permissionName, String description,
+                                                    List<RolePermission> rolePermissions) {
         boolean assignedToStandard = rolePermissions.stream()
                 .anyMatch(rp -> "standard".equalsIgnoreCase(rp.getRoleName()));
-        
+
         boolean assignedToPremium = rolePermissions.stream()
                 .anyMatch(rp -> "premium".equalsIgnoreCase(rp.getRoleName()));
 

@@ -1,19 +1,12 @@
 package fr.checkconsulting.scpi_doc_validation_api.ressource;
 
 
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import fr.checkconsulting.scpi_doc_validation_api.dto.UpdateRoleRequest;
 import fr.checkconsulting.scpi_doc_validation_api.dto.UserDto;
 import fr.checkconsulting.scpi_doc_validation_api.service.UserManagementService;
-
-import org.springframework.web.bind.annotation.RequestBody;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -35,7 +28,6 @@ public class AdminResource {
         return ResponseEntity.ok(users);
     }
 
-   
 
     @PutMapping("/users/{userId}/role")
     public ResponseEntity<Void> updateUserRole(
@@ -43,7 +35,7 @@ public class AdminResource {
             @RequestBody UpdateRoleRequest request) {
 
 
-        userManagementService.updateUserRole(userId, request.getRole()); 
+        userManagementService.updateUserRole(userId, request.getRole());
 
         return ResponseEntity.ok().build();
     }

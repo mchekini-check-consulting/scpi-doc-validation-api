@@ -15,7 +15,10 @@ spring:
       uri: mongodb://admin:admin@localhost:27017/scpi_validation_db?authSource=admin
 
   kafka:
-    bootstrap-servers: localhost:9094
+    bootstrap-servers: localhost:9092
+
+server:
+  port: 8085
 
   autoconfigure:
     exclude:
@@ -36,7 +39,7 @@ keycloak:
     secret: ""
   admin:
     server-url: https://keycloak.check-consulting.net
-    realm: master
+    auth-realm: master
     username: admin
     password: admin
     target-realm: scpi-realm

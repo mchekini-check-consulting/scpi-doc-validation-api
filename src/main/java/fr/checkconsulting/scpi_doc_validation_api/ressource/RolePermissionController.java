@@ -34,7 +34,7 @@ public class RolePermissionController {
 
     @GetMapping
     public ResponseEntity<List<PermissionResponse>> getAllPermissions() {
-        log.info("Getting all permissions");
+      
         List<PermissionResponse> permissions = service.getAllPermissions();
         return ResponseEntity.ok(permissions);
     }

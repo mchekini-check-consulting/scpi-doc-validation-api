@@ -27,7 +27,6 @@ public class RolePermissionService {
     private final RolePermissionRepository repository;
     private final RolePermissionMapper mapper;
 
-
     public UserPermissionsResponse getCurrentUserPermissions(Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new IllegalStateException("Utilisateur non authentifié");
@@ -39,8 +38,7 @@ public class RolePermissionService {
         String email = jwt.getClaim("email");
 
         String userRole = extractUserRole(authentication);
-        
-   
+
         List<String> permissions = repository.findByRoleName(userRole).stream()
                 .map(RolePermission::getPermissionName)
                 .collect(Collectors.toList());
@@ -62,15 +60,14 @@ public class RolePermissionService {
                 .map(auth -> auth.replace("ROLE_", "").toLowerCase())
                 .collect(Collectors.toList());
 
-        
+        if (roles.contains("premium"))
+            return "premium";
+        if (roles.contains("standard"))
+            return "standard";
+        if (roles.contains("admin"))
+            return "admin";
 
-     
-        if (roles.contains("premium")) return "premium";
-        if (roles.contains("standard")) return "standard";
-        if (roles.contains("admin")) return "admin";
-
-
-        return "standard"; 
+        return "standard";
     }
 
     public List<PermissionResponse> getAllPermissions() {
@@ -95,6 +92,13 @@ public class RolePermissionService {
         if (!existing.isEmpty()) {
             throw new IllegalArgumentException("La permission existe déjà");
         }
+
+        List<RolePermission> permissions = List.of(
+                mapper.toEntity(request, "standard"),
+                mapper.toEntity(request, "premium"));
+
+        repository.saveAll(permissions);
+
     }
 
     @Transactional

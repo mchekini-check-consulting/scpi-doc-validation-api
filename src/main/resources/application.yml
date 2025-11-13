@@ -2,16 +2,41 @@ spring:
   application:
     name: scpi-doc-validation-api
 
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://keycloak.check-consulting.net/realms/scpi-realm
+          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
+          audiences: account
+
   data:
     mongodb:
       uri: mongodb://admin:admin@localhost:27017/scpi_validation_db?authSource=admin
 
   kafka:
-    bootstrap-servers: kafka-svc.kafka:9094
+    bootstrap-servers: localhost:9094
 
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
 
+jwt:
+  auth:
+    converter:
+      ressource-id: scpi-invest-front
+      principal-attribute: preferred_username
 
-
-
-
-
+keycloak:
+  auth-server-url: https://keycloak.check-consulting.net
+  realm: scpi-realm
+  resource: scpi-invest-front
+  public-client: true
+  credentials:
+    secret: ""
+  admin:
+    server-url: https://keycloak.check-consulting.net
+    realm: master
+    username: admin
+    password: admin
+    target-realm: scpi-realm

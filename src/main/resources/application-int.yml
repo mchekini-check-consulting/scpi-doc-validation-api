@@ -6,6 +6,10 @@ spring:
     mongodb:
       uri: mongodb://admin:admin@scpi-doc-validation-db:27017/int.scpi_validation_db?authSource=admin
 
+  spring:
+    kafka:
+      bootstrap-servers: kafka-svc.kafka:9094
+
 minio:
   url: "http://minio-service.minio.svc.cluster.local:9000"
   access-key: admin

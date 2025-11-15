@@ -1,9 +1,6 @@
 package fr.checkconsulting.scpi_doc_validation_api.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -12,6 +9,8 @@ import jakarta.validation.constraints.Size;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class CreatePermissionRequest {
     
     @NotBlank(message = "Le nom de la permission est obligatoire")

@@ -1,6 +1,13 @@
 spring:
   application:
     name: scpi-doc-validation-api
+  config:
+    activate:
+      on-profile: local
+
+  data:
+    mongodb:
+      uri: mongodb://admin:admin@localhost:27017/scpi_validation_db?authSource=admin
 
   security:
     oauth2:
@@ -10,16 +17,8 @@ spring:
           jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
           audiences: account
 
-  data:
-    mongodb:
-      uri: mongodb://admin:admin@localhost:27017/scpi_validation_db?authSource=admin
-
   kafka:
-    bootstrap-servers: localhost:9094
-
-  autoconfigure:
-    exclude:
-      - org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
+    bootstrap-servers: kafka-svc.kafka:9094
 
 jwt:
   auth:
@@ -40,3 +39,8 @@ keycloak:
     username: admin
     password: admin
     target-realm: scpi-realm
+
+minio:
+  url: http://localhost:9000
+  access-key: admin
+  secret-key: admin-admin

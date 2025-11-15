@@ -8,9 +8,11 @@ import org.keycloak.admin.client.resource.UsersResource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 @Configuration
 @Slf4j
+@Profile("!test")
 public class KeycloakAdminConfig {
 
     @Value("${keycloak.admin.server-url}")

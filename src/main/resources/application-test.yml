@@ -1,4 +1,5 @@
 spring:
+
   datasource:
     url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     driver-class-name: org.h2.Driver
@@ -22,24 +23,57 @@ spring:
     mongodb:
       uri: mongodb://fakeuser:fakepass@localhost:27017/fake-db
 
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost/test
+          jwk-set-uri: http://localhost/test/jwks
+
   kafka:
     bootstrap-servers: localhost:9092
     consumer:
       group-id: test-group
       auto-offset-reset: earliest
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
     listener:
       missing-topics-fatal: false
 
-spring.autoconfigure.exclude:
-  - org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
 
 logging:
   level:
     org.springframework.kafka: OFF
     org.apache.kafka: OFF
+
+keycloak:
+  auth-server-url: http://localhost
+  realm: test
+  resource: test-client
+  public-client: true
+  credentials:
+    secret: "test-secret"
+  admin:
+    server-url: http://localhost
+    realm: master
+    username: admin
+    password: admin
+    target-realm: test-realm
+
+jwt:
+  auth:
+    converter:
+      ressource-id: test-client
+      principal-attribute: preferred_username
+
+minio:
+  url: http://localhost:9000
+  access-key: test
+  secret-key: test
+
+
 

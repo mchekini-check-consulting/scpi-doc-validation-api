@@ -7,7 +7,6 @@ import fr.checkconsulting.scpi_doc_validation_api.dto.UserPermissionsResponse;
 import fr.checkconsulting.scpi_doc_validation_api.model.entity.RolePermission;
 import fr.checkconsulting.scpi_doc_validation_api.repository.RolePermissionRepository;
 import fr.checkconsulting.scpi_doc_validation_api.mapper.RolePermissionMapper;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,12 +19,16 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public class RolePermissionService {
 
     private final RolePermissionRepository repository;
     private final RolePermissionMapper mapper;
+
+    public RolePermissionService(RolePermissionRepository repository, RolePermissionMapper mapper) {
+        this.repository = repository;
+        this.mapper = mapper;
+    }
 
     public UserPermissionsResponse getCurrentUserPermissions(Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -58,7 +61,7 @@ public class RolePermissionService {
         List<String> roles = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .map(auth -> auth.replace("ROLE_", "").toLowerCase())
-                .collect(Collectors.toList());
+                .toList();
 
         if (roles.contains("premium"))
             return "premium";
@@ -83,7 +86,7 @@ public class RolePermissionService {
                     String description = rolePermissions.isEmpty() ? null : rolePermissions.get(0).getDescription();
                     return mapper.toPermissionResponse(permissionName, description, rolePermissions);
                 })
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Transactional
@@ -94,8 +97,8 @@ public class RolePermissionService {
         }
 
         List<RolePermission> permissions = List.of(
-                mapper.toEntity(request, "standard"),
-                mapper.toEntity(request, "premium"));
+                mapper.toEntity("standard", request),
+                mapper.toEntity("premium", request));
 
         repository.saveAll(permissions);
 
@@ -115,11 +118,11 @@ public class RolePermissionService {
         String description = existingPermissions.isEmpty() ? null : existingPermissions.get(0).getDescription();
 
         RolePermission rolePermission = mapper.toEntity(
+                request.getRoleName(),
                 CreatePermissionRequest.builder()
-                        .permissionName(request.getPermissionName())
-                        .description(description)
-                        .build(),
-                request.getRoleName());
+                                .permissionName(request.getPermissionName())
+                                .description(description)
+                                .build());
 
         repository.save(rolePermission);
     }
@@ -132,6 +135,6 @@ public class RolePermissionService {
     public List<String> getPermissionsByRole(String roleName) {
         return repository.findByRoleName(roleName).stream()
                 .map(RolePermission::getPermissionName)
-                .collect(Collectors.toList());
+                .toList();
     }
 }

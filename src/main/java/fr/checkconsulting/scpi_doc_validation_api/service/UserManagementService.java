@@ -8,12 +8,14 @@ import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import fr.checkconsulting.scpi_doc_validation_api.dto.UserDto;
 import fr.checkconsulting.scpi_doc_validation_api.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
 
+@Profile("!test")
 @Service
 @Slf4j
 public class UserManagementService {

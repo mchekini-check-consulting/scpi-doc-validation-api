@@ -1,9 +1,6 @@
 spring:
   application:
     name: scpi-doc-validation-api
-  config:
-    activate:
-      on-profile: local
 
   data:
     mongodb:

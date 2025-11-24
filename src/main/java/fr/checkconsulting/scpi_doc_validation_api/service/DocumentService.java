@@ -29,34 +29,36 @@ public class DocumentService {
     private final UserDocumentRepository userDocumentRepository;
     private final UserDocumentMapper userDocumentMapper;
 
+    private final KafkaProducerService kafkaProducerService;
+
     public DocumentService(UserDocumentRepository userDocumentRepository,
-                           UserDocumentMapper userDocumentMapper) {
+                           UserDocumentMapper userDocumentMapper, KafkaProducerService kafkaProducerService) {
         this.userDocumentRepository = userDocumentRepository;
         this.userDocumentMapper = userDocumentMapper;
+        this.kafkaProducerService = kafkaProducerService;
     }
 
     public void saveDocument(UserDocumentDto dto) {
-        if (dto == null) {
-            logger.info("Le document reçu est null, sauvegarde ignorée.");
-            return;
-        }
 
-        UserDocument entity = UserDocument.builder()
-                .userEmail(dto.getUserEmail())
-                .fullName(dto.getFullName())
-                .type(dto.getType())
-                .status(UNDER_REVIEW)
-                .originalFileName(dto.getOriginalFileName())
-                .storedFileName(dto.getStoredFileName())
-                .bucketName(dto.getBucketName())
-                .uploadedAt(dto.getUploadedAt())
-                .lastUpdatedAt(dto.getLastUpdatedAt())
-                .build();
+        if (dto == null) return;
+
+        UserDocument entity = userDocumentRepository.findById(dto.getId())
+                .orElseGet(UserDocument::new);
+
+        entity.setId(dto.getId());
+        entity.setUserEmail(dto.getUserEmail());
+        entity.setFullName(dto.getFullName());
+        entity.setType(dto.getType());
+        entity.setStatus(UNDER_REVIEW);
+        entity.setOriginalFileName(dto.getOriginalFileName());
+        entity.setStoredFileName(dto.getStoredFileName());
+        entity.setBucketName(dto.getBucketName());
+        entity.setUploadedAt(dto.getUploadedAt());
+        entity.setLastUpdatedAt(dto.getLastUpdatedAt());
 
         userDocumentRepository.save(entity);
-
-        logger.info("Document sauvegardé pour {}", dto.getUserEmail());
     }
+
 
     public Page<UserDocumentDto> findAllDocuments(Pageable pageable) {
         return userDocumentRepository.findAll(pageable)
@@ -82,7 +84,7 @@ public class DocumentService {
                 .map(UpdateItem::getId)
                 .toList();
 
-        List<UserDocument> docs = userDocumentRepository.findAllById(ids);
+        List<UserDocument> documents = userDocumentRepository.findAllById(ids);
 
         Map<String, DocumentStatus> newStatusMap = request.getDocuments().stream()
                 .collect(Collectors.toMap(
@@ -90,7 +92,7 @@ public class DocumentService {
                         UpdateItem::getStatus
                 ));
 
-        docs.forEach(doc -> {
+        documents.forEach(doc -> {
             DocumentStatus newStatus = newStatusMap.get(doc.getId());
             if (newStatus != null) {
                 doc.setStatus(newStatus);
@@ -98,13 +100,14 @@ public class DocumentService {
             }
         });
 
-        List<UserDocument> saved = userDocumentRepository.saveAll(docs);
+        List<UserDocument> saved = userDocumentRepository.saveAll(documents);
 
-        logger.info("Mise à jour de {} documents", saved.size());
-
-        return saved.stream()
+        List<UserDocumentDto> dtos = saved.stream()
                 .map(userDocumentMapper::toDto)
                 .toList();
+        dtos.forEach(kafkaProducerService::sendDocumentStatus);
+
+        return dtos;
     }
 
 

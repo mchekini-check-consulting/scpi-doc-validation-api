@@ -42,5 +42,5 @@ minio:
   access-key: admin
   secret-key: admin-admin
 
-server:
-  port: 8082
+# server:
+#   port: 8082

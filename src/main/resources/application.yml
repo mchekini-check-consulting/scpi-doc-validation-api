@@ -15,7 +15,7 @@ spring:
           audiences: account
 
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: kafka-svc.kafka:9094
 
 jwt:
   auth:

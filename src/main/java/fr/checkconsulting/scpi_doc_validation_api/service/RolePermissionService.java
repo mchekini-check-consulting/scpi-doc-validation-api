@@ -83,8 +83,14 @@ public class RolePermissionService {
                 .map(entry -> {
                     String permissionName = entry.getKey();
                     List<RolePermission> rolePermissions = entry.getValue();
-                    String description = rolePermissions.isEmpty() ? null : rolePermissions.get(0).getDescription();
-                    return mapper.toPermissionResponse(permissionName, description, rolePermissions);
+                    
+                 
+                    RolePermission first = rolePermissions.get(0);
+                    String name = first.getName();
+                    String description = first.getDescription();
+                    
+                    
+                    return mapper.toPermissionResponse(permissionName, name, description, rolePermissions);
                 })
                 .toList();
     }
@@ -96,12 +102,12 @@ public class RolePermissionService {
             throw new IllegalArgumentException("La permission existe déjà");
         }
 
+        
         List<RolePermission> permissions = List.of(
                 mapper.toEntity("standard", request),
                 mapper.toEntity("premium", request));
 
         repository.saveAll(permissions);
-
     }
 
     @Transactional
@@ -114,15 +120,25 @@ public class RolePermissionService {
             throw new IllegalArgumentException("Cette permission est déjà assignée à ce rôle");
         }
 
+       
         List<RolePermission> existingPermissions = repository.findByPermissionName(request.getPermissionName());
-        String description = existingPermissions.isEmpty() ? null : existingPermissions.get(0).getDescription();
+        
+        if (existingPermissions.isEmpty()) {
+            throw new IllegalArgumentException("La permission n'existe pas");
+        }
+        
+        RolePermission firstPermission = existingPermissions.get(0);
+        String name = firstPermission.getName();
+        String description = firstPermission.getDescription();
 
+    
         RolePermission rolePermission = mapper.toEntity(
                 request.getRoleName(),
                 CreatePermissionRequest.builder()
-                                .permissionName(request.getPermissionName())
-                                .description(description)
-                                .build());
+                        .permissionName(request.getPermissionName())
+                        .name(name)
+                        .description(description)
+                        .build());
 
         repository.save(rolePermission);
     }

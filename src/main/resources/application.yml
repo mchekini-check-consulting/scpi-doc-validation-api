@@ -15,7 +15,7 @@ spring:
           audiences: account
 
   kafka:
-    bootstrap-servers: kafka-svc.kafka:9094
+    bootstrap-servers: localhost:9092
 
 jwt:
   auth:
@@ -41,3 +41,6 @@ minio:
   url: http://localhost:9000
   access-key: admin
   secret-key: admin-admin
+
+server:
+  port: 8082

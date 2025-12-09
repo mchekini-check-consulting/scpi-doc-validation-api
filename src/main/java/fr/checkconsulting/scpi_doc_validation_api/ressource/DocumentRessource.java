@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/documents")
+@RequestMapping("/validation-api/v1/documents")
 public class DocumentRessource {
 
     private final DocumentService documentService;

@@ -24,6 +24,8 @@ public class RolePermission {
     
     @Indexed
     private String roleName;
+
+    private String name;
     
     private String permissionName;
     

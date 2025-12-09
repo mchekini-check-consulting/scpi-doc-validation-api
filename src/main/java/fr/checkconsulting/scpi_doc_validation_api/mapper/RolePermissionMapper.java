@@ -6,7 +6,6 @@ import fr.checkconsulting.scpi_doc_validation_api.model.entity.RolePermission;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
@@ -17,6 +16,7 @@ public interface RolePermissionMapper {
     @Mapping(target = "roleName", source = "roleName")
     @Mapping(target = "permissionName", source = "request.permissionName")
     @Mapping(target = "description", source = "request.description")
+    @Mapping(target = "name", source = "request.name")
     RolePermission toEntity(String roleName, CreatePermissionRequest request);
 
 
@@ -25,7 +25,7 @@ public interface RolePermissionMapper {
     PermissionResponse toDto(RolePermission entity);
 
 
-    default PermissionResponse toPermissionResponse(String permissionName, String description,
+    default PermissionResponse toPermissionResponse(String permissionName, String description, String name,
                                                     List<RolePermission> rolePermissions) {
         boolean assignedToStandard = rolePermissions.stream()
                 .anyMatch(rp -> "standard".equalsIgnoreCase(rp.getRoleName()));
@@ -35,6 +35,7 @@ public interface RolePermissionMapper {
 
         return PermissionResponse.builder()
                 .permissionName(permissionName)
+                .name(name)
                 .description(description)
                 .assignedToStandard(assignedToStandard)
                 .assignedToPremium(assignedToPremium)

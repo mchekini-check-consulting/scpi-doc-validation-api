@@ -1,5 +1,6 @@
 package fr.checkconsulting.scpi_doc_validation_api.dto;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,7 +11,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PermissionResponse {
-    
+
+
+    private String name;
     private String permissionName;
     private String description;
     private boolean assignedToStandard;  
